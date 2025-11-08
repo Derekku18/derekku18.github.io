@@ -41,40 +41,53 @@
       margin-top: 2rem;
       font-size: 1.5rem;
       font-style: italic;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
     }
   </style>
 </head>
 <body>
-  <h1>Need a Laugh?</h1>
-  <button id="jokeButton">Tell me a joke</button>
+  <h1>Oij Joke Roulette</h1>
+  <button id="jokeButton">Tell me a joke!</button>
   <p id="joke"></p>
 
   <script>
-    const jokes = [
-      "Why don't scientists trust atoms? Because they make up everything!",
-      "I told my computer I needed a break, and it said 'No problem — I’ll go to sleep.'",
-      "Why did the scarecrow win an award? Because he was outstanding in his field!",
-      "Parallel lines have so much in common. It’s a shame they’ll never meet.",
-      "Why did the math book look sad? Because it had too many problems."
-    ];
-
     const jokeButton = document.getElementById('jokeButton');
     const jokeDisplay = document.getElementById('joke');
+    let jokes = [];
+
+    // Load jokes from the jokes.txt file
+    async function loadJokes() {
+      try {
+        const response = await fetch('go-jokes.txt');
+        const text = await response.text();
+        // Split the text file into lines (filter out empty lines)
+        jokes = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+      } catch (err) {
+        console.error('Failed to load jokes:', err);
+        jokeDisplay.textContent = "Couldn't load jokes right now 😞";
+      }
+    }
 
     function tellJoke() {
-      // Pick a random joke
+      if (jokes.length === 0) {
+        jokeDisplay.textContent = "No jokes loaded yet!";
+        return;
+      }
+
       const joke = jokes[Math.floor(Math.random() * jokes.length)];
       jokeDisplay.textContent = joke;
 
-      // Speak it aloud using Web Speech API
       const utterance = new SpeechSynthesisUtterance(joke);
-      utterance.rate = 1; // speed (0.1–10)
-      utterance.pitch = 1; // pitch (0–2)
+      utterance.rate = 1;
+      utterance.pitch = 1;
       utterance.lang = 'en-US';
       speechSynthesis.speak(utterance);
     }
 
     jokeButton.addEventListener('click', tellJoke);
+    loadJokes(); // Load the jokes as soon as the page loads
   </script>
 </body>
 </html>
