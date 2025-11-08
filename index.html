@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Joke Teller</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: linear-gradient(135deg, #4e54c8, #8f94fb);
+      color: white;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    button {
+      background: #fff;
+      color: #4e54c8;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 2rem;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #f0f0f0;
+    }
+
+    #joke {
+      margin-top: 2rem;
+      font-size: 1.5rem;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <h1>Need a Laugh?</h1>
+  <button id="jokeButton">Tell me a joke</button>
+  <p id="joke"></p>
+
+  <script>
+    const jokes = [
+      "Why don't scientists trust atoms? Because they make up everything!",
+      "I told my computer I needed a break, and it said 'No problem — I’ll go to sleep.'",
+      "Why did the scarecrow win an award? Because he was outstanding in his field!",
+      "Parallel lines have so much in common. It’s a shame they’ll never meet.",
+      "Why did the math book look sad? Because it had too many problems."
+    ];
+
+    const jokeButton = document.getElementById('jokeButton');
+    const jokeDisplay = document.getElementById('joke');
+
+    function tellJoke() {
+      // Pick a random joke
+      const joke = jokes[Math.floor(Math.random() * jokes.length)];
+      jokeDisplay.textContent = joke;
+
+      // Speak it aloud using Web Speech API
+      const utterance = new SpeechSynthesisUtterance(joke);
+      utterance.rate = 1; // speed (0.1–10)
+      utterance.pitch = 1; // pitch (0–2)
+      utterance.lang = 'en-US';
+      speechSynthesis.speak(utterance);
+    }
+
+    jokeButton.addEventListener('click', tellJoke);
+  </script>
+</body>
+</html>
