@@ -86,7 +86,7 @@
       speechSynthesis.speak(utterance);
     }
 
-    function tellJokeBetter() {
+    function tellJokeBetterMaybe() {
       if (jokes.length === 0) {
         jokeDisplay.textContent = "No jokes loaded yet!";
         return;
@@ -114,11 +114,12 @@
       speechSynthesis.speak(utterance);
     }
 
-    jokeButton.addEventListener('click', tellJokeBetter);
+    jokeButton.addEventListener('click', tellJoke);
     loadJokes(); // Load the jokes as soon as the page loads
   </script>
 </body>
 </html>
+
 
 
 
