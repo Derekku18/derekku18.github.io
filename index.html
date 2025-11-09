@@ -75,6 +75,10 @@
         jokeDisplay.textContent = "No jokes loaded yet!";
         return;
       }
+      
+      if (speechSynthesis.speaking) {
+        speechSynthesis.cancel(); // immediately stops current speech
+      }
 
       const joke = jokes[Math.floor(Math.random() * jokes.length)];
       jokeDisplay.textContent = joke;
@@ -119,6 +123,7 @@
   </script>
 </body>
 </html>
+
 
 
 
