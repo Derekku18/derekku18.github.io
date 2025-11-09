@@ -86,10 +86,39 @@
       speechSynthesis.speak(utterance);
     }
 
-    jokeButton.addEventListener('click', tellJoke);
+    function tellJokeBetter() {
+      if (jokes.length === 0) {
+        jokeDisplay.textContent = "No jokes loaded yet!";
+        return;
+      }
+    
+      // Stop any ongoing speech
+      speechSynthesis.cancel();
+    
+      const joke = jokes[Math.floor(Math.random() * jokes.length)];
+      jokeDisplay.textContent = joke;
+    
+      const utterance = new SpeechSynthesisUtterance(joke);
+      utterance.rate = 1;
+      utterance.pitch = 1;
+    
+      // Optional: pick a nicer voice
+      const preferredVoice = voices.find(v =>
+        v.name.includes("Natural") ||
+        v.name.includes("Google US English") ||
+        v.name.includes("Microsoft Aria") ||
+        v.name.includes("Samantha")
+      );
+      if (preferredVoice) utterance.voice = preferredVoice;
+    
+      speechSynthesis.speak(utterance);
+    }
+
+    jokeButton.addEventListener('click', tellJokeBetter);
     loadJokes(); // Load the jokes as soon as the page loads
   </script>
 </body>
 </html>
+
 
 
