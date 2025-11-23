@@ -1,0 +1,27 @@
+<div class="amazon-box">
+  <a href="https://www.amazon.com/dp/{{ include.asin }}?tag=dl18-20" target="_blank">
+    <img src="https://images-na.ssl-images-amazon.com/images/P/{{ include.asin }}.jpg" alt="{{ include.title }}">
+  </a>
+  <p><strong>{{ include.title }}</strong></p>
+  <p><a href="https://www.amazon.com/dp/{{ include.asin }}?tag=dl18-20" class="btn">Check Price</a></p>
+</div>
+
+<style>
+.amazon-box {
+  border: 1px solid #eee;
+  padding: 10px;
+  margin-bottom: 20px;
+  text-align: center;
+  border-radius: 8px;
+}
+.amazon-box img {
+  max-width: 200px;
+  margin-bottom: 10px;
+}
+.btn {
+  background: #ff9900;
+  padding: 8px 12px;
+  color: #fff;
+  border-radius: 5px;
+}
+</style>
