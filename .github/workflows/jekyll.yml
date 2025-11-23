@@ -2,49 +2,48 @@ name: Build and Deploy Jekyll site to GitHub Pages
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
+  pull_request:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Check out repository
         uses: actions/checkout@v4
-
-      - name: Show workspace to verify Gemfile
-        run: ls -lah ${{ github.workspace }}
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.1'
+          ruby-version: '3.1'   # Recommended for Jekyll 4.x
           bundler-cache: true
 
-      - name: Install Dependencies
-        run: bundle install
-        working-directory: ${{ github.workspace }}
+      - name: Install dependencies
+        run: |
+          bundle install
 
-      - name: Build Jekyll Site
-        run: bundle exec jekyll build --trace -d _site
-        working-directory: ${{ github.workspace }}
+      - name: Build site
+        run: bundle exec jekyll build -d _site
 
-      - name: Upload site artifact
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: _site
 
   deploy:
     needs: build
+    runs-on: ubuntu-latest
     permissions:
-      id-token: write
       pages: write
+      id-token: write
+
     environment:
       name: github-pages
-
-    runs-on: ubuntu-latest
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Deploy site
+      - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
