@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Oij Joke Roulette</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: linear-gradient(135deg, #4e54c8, #8f94fb);
+      color: white;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    button {
+      background: #fff;
+      color: #4e54c8;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 2rem;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #f0f0f0;
+    }
+
+    #joke {
+      margin-top: 2rem;
+      font-size: 1.5rem;
+      font-style: italic;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>Oij Joke Roulette</h1>
+  <button id="jokeButton">Tell me a joke!</button>
+  <p id="joke"></p>
+
+  <script>
+    const jokeButton = document.getElementById('jokeButton');
+    const jokeDisplay = document.getElementById('joke');
+    let jokes = [];
+
+    // Load jokes from the go-jokes.txt file
+    async function loadJokes() {
+      try {
+        const response = await fetch('go-jokes.txt');
+        const text = await response.text();
+        // Split the text file into lines (filter out empty lines)
+        jokes = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+      } catch (err) {
+        console.error('Failed to load jokes:', err);
+        jokeDisplay.textContent = "Couldn't load jokes right now 😞";
+      }
+    }
+
+    function tellJoke() {
+      if (jokes.length === 0) {
+        jokeDisplay.textContent = "No jokes loaded yet!";
+        return;
+      }
+      
+      if (speechSynthesis.speaking) {
+        speechSynthesis.cancel(); // immediately stops current speech
+      }
+
+      const joke = jokes[Math.floor(Math.random() * jokes.length)];
+      jokeDisplay.textContent = joke;
+
+      const utterance = new SpeechSynthesisUtterance(joke);
+      utterance.rate = 1;
+      utterance.pitch = 1;
+      utterance.lang = 'en-US';
+      speechSynthesis.speak(utterance);
+    }
+
+    function tellJokeBetterMaybe() {
+      if (jokes.length === 0) {
+        jokeDisplay.textContent = "No jokes loaded yet!";
+        return;
+      }
+    
+      // Stop any ongoing speech
+      speechSynthesis.cancel();
+    
+      const joke = jokes[Math.floor(Math.random() * jokes.length)];
+      jokeDisplay.textContent = joke;
+    
+      const utterance = new SpeechSynthesisUtterance(joke);
+      utterance.rate = 1;
+      utterance.pitch = 1;
+    
+      // Optional: pick a nicer voice
+      const preferredVoice = voices.find(v =>
+        v.name.includes("Natural") ||
+        v.name.includes("Google US English") ||
+        v.name.includes("Microsoft Aria") ||
+        v.name.includes("Samantha")
+      );
+      if (preferredVoice) utterance.voice = preferredVoice;
+    
+      speechSynthesis.speak(utterance);
+    }
+
+    jokeButton.addEventListener('click', tellJoke);
+    loadJokes(); // Load the jokes as soon as the page loads
+  </script>
+</body>
+</html>
+
+
+
+
+
