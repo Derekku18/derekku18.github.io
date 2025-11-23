@@ -9,40 +9,42 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out repository
+      - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Show workspace to verify Gemfile
+        run: ls -lah ${{ github.workspace }}
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: "3.1"
+          ruby-version: '3.1'
           bundler-cache: true
 
-      - name: Install dependencies
-        working-directory: ${{ github.workspace }}
+      - name: Install Dependencies
         run: bundle install
-
-      - name: Build site
         working-directory: ${{ github.workspace }}
-        run: bundle exec jekyll build -d _site
 
-      - name: Upload artifact
+      - name: Build Jekyll Site
+        run: bundle exec jekyll build --trace -d _site
+        working-directory: ${{ github.workspace }}
+
+      - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: _site
 
   deploy:
     needs: build
-    runs-on: ubuntu-latest
     permissions:
-      pages: write
       id-token: write
-
+      pages: write
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Deploy site
         id: deployment
         uses: actions/deploy-pages@v4
